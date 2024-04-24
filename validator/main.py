@@ -9,40 +9,36 @@ from guardrails.validator_base import (
 )
 
 
-@register_validator(name="guardrails/validator_template", data_type="string")
-class ValidatorTemplate(Validator):
-    """Validates that {fill in how you validator interacts with the passed value}.
+@register_validator(name="guardrails/contains_string", data_type="string")
+class ContainsString(Validator):
+    """Validates that a string contains a substring.
 
     **Key Properties**
 
-    | Property                      | Description                       |
-    | ----------------------------- | --------------------------------- |
-    | Name for `format` attribute   | `guardrails/validator_template`   |
-    | Supported data types          | `string`                          |
-    | Programmatic fix              | {If you support programmatic fixes, explain it here. Otherwise `None`} |
+    | Property                      | Description         |
+    | ----------------------------- | ------------------- |
+    | Name for `format` attribute   | `contains_string`   |
+    | Supported data types          | `string`            |
+    | Programmatic fix              | None                |
 
     Args:
-        arg_1 (string): {Description of the argument here}
-        arg_2 (string): {Description of the argument here}
-    """  # noqa
+        substring (str): The substring to search for.
+        on_fail (Optional[Callable]): A function to call when the validator fails. Defaults to None.
+    """
 
-    # If you don't have any init args, you can omit the __init__ method.
     def __init__(
         self,
-        arg_1: str,
-        arg_2: str,
+        substring: str,
         on_fail: Optional[Callable] = None,
     ):
-        super().__init__(on_fail=on_fail, arg_1=arg_1, arg_2=arg_2)
-        self._arg_1 = arg_1
-        self._arg_2 = arg_2
+        super().__init__(on_fail=on_fail, substring=substring)
+        self._substring = substring
 
-    def validate(self, value: Any, metadata: Dict = {}) -> ValidationResult:
-        """Validates that {fill in how you validator interacts with the passed value}."""
-        # Add your custom validator logic here and return a PassResult or FailResult accordingly.
-        if value != "pass": # FIXME
+    def validate(self, value: Any, metadata: Dict) -> ValidationResult:
+        """Validates that a string contains a substring."""
+        if self._substring not in value:
             return FailResult(
-                error_message="{A descriptive but concise error message about why validation failed}",
-                fix_value="{The programmtic fix if applicable, otherwise remove this kwarg.}",
+                error_message=f"{value} doesn't contain {self._substring}",
+                fix_value="",
             )
         return PassResult()
