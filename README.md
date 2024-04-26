@@ -24,8 +24,8 @@ In this example, we'll test that a generated word contains the substring `s`.
 
 ```python
 # Import Guard and Validator
-from guardrails.hub import ContainsString
 from guardrails import Guard
+from guardrails.hub import ContainsString
 
 # Setup Guard with the validator
 guard = Guard().use(ContainsString, substring="s", on_fail="exception")
@@ -35,13 +35,13 @@ guard.validate("pass")
 
 # Test failing string
 try:
-	guard.validate("fail")
+    guard.validate("fail")
 except Exception as e:
-	print(e)
+    print(e)
 ```
 Output:
 ```console
--
+Validation failed for field with errors: fail doesn't contain s
 ```
 
 # API Reference
